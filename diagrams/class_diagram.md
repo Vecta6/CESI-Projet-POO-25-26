@@ -3,78 +3,78 @@ classDiagram
     %% --- Logique métier ---
 
     class Game {
-        -Grid grid
-        -Rule* rule
+        - Grid grid
+        - Rule* rule
 
         Game(int width, int height, int[][] grid)
 
-        +run(int stepNumber) void
-        +step() void
-        +getGrid() Grid
+        + run(int stepNumber) void
+        + step() void
+        + getGrid() Grid
     }
 
     class Grid {
-        -int width
-        -int height
-        -Cell[][] cells
+        - int width
+        - int height
+        - Cell[][] cells
 
-        +Grid(int width, int height, int[][] grid)
+        + Grid(int width, int height, int[][] grid)
 
-        +getCell(int x, int y) Cell&
-        +countAliveNeighbours(int x, int y) int
-        +step(Rule* rule) void
+        + getCell(int x, int y) Cell&
+        + countAliveNeighbours(int x, int y) int
+        + step(Rule* rule) void
     }
 
     class Cell {
-        -CellState* state
+        - CellState* state
 
-        +Cell()
-        +Cell(int state)
+        + Cell()
+        + Cell(int state)
 
-        +isAlive() bool
-        +symbol() char
-        +setState(CellState* newState) void
+        + isAlive() bool
+        + symbol() char
+        + setState(CellState* newState) void
     }
 
     class CellState {
         <<abstract>>
-        +isAlive() bool*
-        +symbol() char*
+        + virtual isAlive() bool*
+        + virtual symbol() char*
     }
 
     class AliveState {
-        +isAlive() bool
-        +symbol() char
+        + isAlive() bool
+        + symbol() char
     }
 
     class DeadState {
-        +isAlive() bool
-        +symbol() char
+        + isAlive() bool
+        + symbol() char
     }
 
     class Rule {
         <<abstract>>
-        +CellState* computeNextState(Cell cell, int aliveNeighbours)*
+        + virtual computeNextState(Cell cell, int aliveNeighbours)* CellState*
     }
 
     class ClassicLifeRule {
-        +CellState* computeNextState(Cell cell, int aliveNeighbours)
+        + computeNextState(Cell cell, int aliveNeighbours) CellState*
     }
 
     class Console {
-        #Game game
+        # Game game
 
         Console(string filePath, int steps)
         Console(string filePath)
 
-        +virtual showCurrentGrid() void
+        + virtual showCurrentGrid() void
 
     }
 
     class Gui {
-        -render() void
+        - render() void
         Gui(string filePath)
-        +execute() void
+        + execute() void
     }
 
     %% --- Relations ---
