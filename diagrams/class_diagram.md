@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
     %% --- Logique métier ---
 
@@ -90,3 +91,5 @@ classDiagram
     Rule <|-- ClassicLifeRule
     Console o-- Game
     Gui --|> Console
+
+```
