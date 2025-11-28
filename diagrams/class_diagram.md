@@ -31,8 +31,6 @@ classDiagram
         + Cell()
         + Cell(int state)
 
-        + isAlive() bool
-        + symbol() char
         + setState(CellState* newState) void
     }
 

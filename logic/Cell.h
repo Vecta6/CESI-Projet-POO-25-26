@@ -10,8 +10,4 @@ class Cell {
 
         //setters
         void setState(CellState* newState);
-
-        //methods (Deja def dans differentes State ! vraiment necessaire ici ??)
-        bool isAlive();
-        char symbol();
 };
