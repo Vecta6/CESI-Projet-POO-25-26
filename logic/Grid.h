@@ -2,14 +2,15 @@
 #include "Cell.h"
 #include "Rule.h"
 #include <vector>
+#include <iostream>
+using namespace std;
 
 class Grid{
     private:
         int width;
         int height;
-        std::vector<std::vector<int>> grid;
     public:
-        Grid(int width, int height, std::vector<std::vector<int>>& grid);
+        Grid(string filePath);
 
         //getters
         Cell& getCell(int x, int y);
