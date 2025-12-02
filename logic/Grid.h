@@ -7,15 +7,19 @@ using namespace std;
 
 class Grid{
     private:
-        int width;
-        int height;
+        int columns;
+        int lines;
+        vector<vector<Cell*>> cells;
     public:
         Grid(string filePath);
+        ~Grid();
 
         //getters
-        Cell& getCell(int x, int y);
+        Cell& getCell(int line, int column);
+        int getLines() const { return lines; }
+        int getColumns() const { return columns; }
         
         //methods
-        int countAliveNeighbours(int x, int y);
+        int countAliveNeighbours(int line, int column);
         void step(Rule* rule);
 };
