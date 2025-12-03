@@ -10,12 +10,12 @@ public:
 
 class AliveState:public CellState{
 public:
-    bool isAlive() override {return true;}
-    char symbol() override {return '■';}
+    bool isAlive() override;
+    char symbol() override;
 };
 
 class DeadState:public CellState{
     public:
-        bool isAlive() override {return false;}
-        char symbol() override {return '⋅';}
+        bool isAlive() override;
+        char symbol() override;
 };
