@@ -10,6 +10,7 @@ Grid::Grid(string filePath){
 
     ifstream file(filePath);
 
+    //Check if the file is correctly open
     if(!file){
         cerr << "Impossible d'ouvrir le fichier !" << endl;
         lines = 0;
