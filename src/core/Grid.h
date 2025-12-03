@@ -1,30 +1,26 @@
-//
-// Created by nathan on 02/12/2025.
-//
-
 #pragma once
-#ifndef CESI_PROJECT_POO_25_26_GRID_H
-#define CESI_PROJECT_POO_25_26_GRID_H
-
-#include "core/Cells/Cell.h"
-#include "core/Rule/Rule.h"
+#include "Cell.h"
+#include "Rule.h"
 #include <vector>
+#include <iostream>
+using namespace std;
 
-class Grid{
+class Grid {
 private:
-    int width;
-    int height;
-    std::vector<std::vector<int>> grid;
+    int columns;
+    int lines;
+    vector<vector<Cell*>> cells;
+
 public:
-    Grid(int width, int height, std::vector<std::vector<int>>& grid);
+    Grid(string filePath);
+    ~Grid();
 
-    //getters
-    Cell& getCell(int x, int y);
-
-    //methods
-    int countAliveNeighbours(int x, int y);
+    // Getters
+    Cell& getCell(int line, int column);
+    int getLines() const {return lines;}
+    int getColumns() const {return columns;}
+    
+    // Methods
+    int countAliveNeighbours(int line, int column);
     void step(Rule* rule);
 };
-
-
-#endif //CESI_PROJECT_POO_25_26_GRID_H
