@@ -6,8 +6,10 @@ private:
     CellState* state;
 public:
     Cell();
-    Cell(int state);
-    Cell(CellState* initialState){state = initialState;}
+    Cell(int cellValue);
+    Cell(CellState* initialState);
 
     void setState(CellState* newState);
+
+    CellState* getState();
 };

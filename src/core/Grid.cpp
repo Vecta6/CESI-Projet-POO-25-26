@@ -78,3 +78,51 @@ Grid::~Grid() {
 Cell& Grid::getCell(int line, int column){
     return *cells[line][column];
 }
+
+int Grid::countAliveNeighbours(int line, int column){
+    int count = 0;
+
+    //Run through the 8 neighbours
+    for (int i = -1; i <= 1; i++){
+        for (int j = -1; j <= 1; j++){
+            if (i == 0 && j == 0) continue;
+
+            int neighbourLine = line + i;
+            int neighbourColumn = column + j;
+
+            //Check the grid limits
+            if (neighbourLine >= 0 && neighbourLine < lines && neighbourColumn >= 0 && neighbourColumn < columns){
+
+                //Increment the counter when a neighbour is alive
+                if (cells[neighbourLine][neighbourColumn]->getState()->isAlive()){
+                    count++;
+                }
+            }
+        }
+    }
+    return count;
+}
+
+void Grid::step(Rule* rule){
+    //Temporary copy of new states
+    vector<vector<CellState*>> newStates(lines);
+
+    for (int i = 0; i < lines; i++){
+        newStates[i].resize(columns);
+    }
+
+    //Calculate new states
+    for (int i = 0; i < lines; i++){
+        for (int j = 0; j < columns; j++){
+            int aliveNeighbours = countAliveNeighbours(i, j);
+            newStates[i][j] = rule->computeNextState(cells[i][j], aliveNeighbours);
+        }
+    }
+    
+    //Apply new states
+    for (int i = 0; i < lines; i++){
+        for (int j = 0; j < columns; j++){
+            cells[i][j]->setState(newStates[i][j]);
+        }
+    }
+}

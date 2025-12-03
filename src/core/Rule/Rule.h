@@ -14,7 +14,7 @@
 
 class Rule {
 public:
-    virtual CellState* computeNextState(Cell cell, int aliveNeighbours) = 0;
+    virtual CellState* computeNextState(Cell* cell, int aliveNeighbours) = 0;
     virtual ~Rule() = 0;
 };
 
