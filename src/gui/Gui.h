@@ -21,6 +21,8 @@ class Gui {
     bool paused;
     Font font;       
     Text statusText;
+    Text speedText;
+    Text helpText;
 
     public:
         Gui(string filePath, int cellSize = 20);
@@ -29,6 +31,7 @@ class Gui {
         //methods
         void render();
         void handleEvents();
+        void reset();
         void update();
         void run();
 };

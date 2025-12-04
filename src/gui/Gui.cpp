@@ -21,16 +21,28 @@ Gui::Gui(string filePath, int cellSize){
     window = new RenderWindow(VideoMode(windowWidth, windowHeight),"Jeu de la Vie");
     window->setFramerateLimit(60);
 
-    if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf")) {
+    if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
         cout << "Erreur : impossible de charger la police" << endl;
     }
     
-    //Text
+    //Config texts
     statusText.setFont(font);
     statusText.setCharacterSize(20);
     statusText.setFillColor(Color::Green);
     statusText.setPosition(10, 10);
     statusText.setString("▶ PLAY");
+
+    speedText.setFont(font);
+    speedText.setCharacterSize(18);
+    speedText.setFillColor(Color::Black);
+    speedText.setPosition(10, 40);  
+    speedText.setString("Vitesse: 0.5s");
+
+    helpText.setFont(font);
+    helpText.setCharacterSize(14);
+    helpText.setFillColor(Color(128, 128, 128));
+    helpText.setPosition(10, windowHeight - 25);
+    helpText.setString("Espace: Pause | ↑↓: Vitesse | →: Pas a pas (⚠ Mets en pause pour avancer pas a pas) | R: Reset");
 }
 
 Gui::~Gui() {
@@ -63,32 +75,37 @@ void Gui::render() {
             window->draw(rectangle);
         }
     }
-    window->draw(statusText);   //Draw text
+    //Draw texts
+    window->draw(statusText);   
+    window->draw(speedText);
+    window->draw(helpText);
     window->display();  //End the current frame and display its contents on screen
 }
 
 void Gui::handleEvents() {
     Event event;
-    while (window->pollEvent(event)) {
-        if (event.type == Event::Closed) {
+    while (window->pollEvent(event)){
+        if (event.type == Event::Closed){
             window->close();
         }
         
         //Iteration speed control
-        if (event.type == Event::KeyPressed) {
-            if (event.key.code == Keyboard::Up) {
+        if (event.type == Event::KeyPressed){
+            if (event.key.code == Keyboard::Up){
                 iterationDelay -= 0.1f;
                 if (iterationDelay < 0.1f) iterationDelay = 0.1f;
+                 speedText.setString("Vitesse: " + to_string(iterationDelay) + "s");
                 
             }
-            else if (event.key.code == Keyboard::Down) {
+            else if (event.key.code == Keyboard::Down){
                 iterationDelay += 0.1f;
+                speedText.setString("Vitesse: " + to_string(iterationDelay) + "s");
                 
             }
-            else if (event.key.code == Keyboard::Space) {
+            else if (event.key.code == Keyboard::Space){
                 //Pause/Play
-                paused = !paused;  // ← Inverse l'état
-                if (paused) {
+                paused = !paused;
+                if (paused){
                     statusText.setString("⏸ PAUSE");
                     statusText.setFillColor(Color::Red);
                 } else {
@@ -96,6 +113,37 @@ void Gui::handleEvents() {
                     statusText.setFillColor(Color::Green);
                 }
             }
+            else if (event.key.code == Keyboard::Right){
+                if (paused){
+                    game->step();
+                }
+            }
+            else if (event.key.code == Keyboard::R){
+                reset();
+                paused = true;
+                statusText.setString("⏸ PAUSE");
+                statusText.setFillColor(Color::Red);
+            }
         }
+    }
+}
+
+void Gui::reset(){
+    delete game;
+    game = new Game(); //Revoir selon nouveau constructeur
+}
+
+void Gui::update(){
+    if (!paused && clock.getElapsedTime().asSeconds() >= iterationDelay){
+        game->step();
+        clock.restart();
+    }
+}
+
+void Gui::run(){
+    while (window->isOpen()){
+        handleEvents();
+        update();
+        render();
     }
 }
