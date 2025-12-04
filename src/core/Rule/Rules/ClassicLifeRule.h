@@ -4,7 +4,7 @@
 #include "../../Cells/CellState.h"
 #include "../../Cells/Cell.h"
 
-class ClassicLifeRule:public Rule{
+class ClassicLifeRule : public Rule {
 public:
-    CellState* computeNextState(Cell* cell, int aliveNeighbours) override;
+    CellState* computeNextState(const Cell& cell, int aliveNeighbours) override;
 };

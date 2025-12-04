@@ -1,7 +1,7 @@
 #pragma once
-#include "Console.h"
-#include "Grid.h"
-#include "Rule.h"
+#include "../console/Console.h"
+#include "../core/Grid.h"
+#include "../core/Rule/Rules/ClassicLifeRule.h"
 
 #include <vector>
 using namespace std;

@@ -1,6 +1,6 @@
 #pragma once
-#include "Cell.h"
-#include "Rule.h"
+#include "Cells/Cell.h"
+#include "Rule/Rule.h"
 #include <vector>
 #include <iostream>
 using namespace std;

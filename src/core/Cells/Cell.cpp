@@ -1,25 +1,21 @@
 #include "Cell.h"
-#include "CellState.h"
+#include "CellStates/AliveState.h"
+#include "CellStates/DeadState.h"
 
-Cell::Cell(){state = new DeadState();}
+Cell::Cell(int initial) : state(nullptr) {
 
-Cell::Cell(int cellValue){      //revoir ce constructeur
-    switch (cellValue){
-        case 0:
-            state = new DeadState();
-            break;
-        
-        case 1:
-            state = new AliveState();
-            break;
-
-        default:
-            break;
+    if (initial != 0) {
+        state = new AliveState;
+    } else {
+        state = new DeadState;
     }
 }
 
-Cell::Cell(CellState* initialState){state = initialState;}
+void Cell::setState(CellState* newState) {
+    delete state;
+    state = newState;
+}
 
-void Cell::setState(CellState* newState){state = newState;}
-
-CellState* Cell::getState(){return state;}
+CellState* Cell::getState() const {
+    return state;
+}
