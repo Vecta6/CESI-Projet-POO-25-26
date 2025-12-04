@@ -70,9 +70,20 @@ classDiagram
     }
 
     class Gui {
-        - render() void
-        Gui(string filePath)
-        + execute() void
+        - Game* game
+        - RenderWindow* window
+        - int cellSize
+        - float iterationDelay
+        - Clock clock
+        - bool paused
+        - Font font    
+        - Text statusText
+        + Gui(string filePath, int cellSize)
+        + ~Gui()
+        + render() void
+        + handleEvents() void
+        + update() void
+        + run() void
     }
 
     %% --- Relations ---
