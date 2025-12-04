@@ -1,17 +1,15 @@
 #pragma once
-#include "../console/Console.h"
 #include "../core/Grid.h"
 #include "../core/Rule/Rules/ClassicLifeRule.h"
-
+#include <memory>
 #include <vector>
-using namespace std;
 
 class Game{
     private:
-        Grid* grid;
-        Rule* rule;
+        std::unique_ptr<Grid> grid;
+        std::unique_ptr<Rule> rule;
     public:
-        Game(int width, int height, vector<vector<int>>& grid); 
+        explicit Game(const std::vector<std::vector<int>> &gridData);
         ~Game();
 
         //getters

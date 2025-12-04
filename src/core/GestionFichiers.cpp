@@ -33,25 +33,3 @@ bool GestionFichier::EcrireFichier(const std::string &ChSource, const std::strin
 
     return true;
 }
-
-
-bool GestionFichier::LoadGrid(const std::string &path, std::vector<std::vector<int>> &grid, int &rows, int &cols) {
-    std::ifstream file(path);
-    if (!file) return false;
-
-    if (!(file >> rows >> cols)) return false;
-    if (rows<=0 || cols<=0) return false;
-
-    grid.assign(rows, std::vector<int>(cols, 0));
-
-    for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            int v;
-            if (!(file >> v)) return false;
-
-            grid[r][c] = v;
-        }
-    }
-
-    return true;
-}

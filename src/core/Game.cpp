@@ -1,22 +1,15 @@
 #include "Game.h"
 #include "Rule/Rules/ClassicLifeRule.h"
+#include <memory>
 
-Game::Game(int width, int height, vector<vector<int>>& grid){
-     rule = new ClassicLifeRule();
+Game::Game(const std::vector<std::vector<int>> &gridData){
+     grid = std::make_unique<Grid>(gridData);
+     rule = std::make_unique<ClassicLifeRule>();
 }
 
-/*#include <iostream>
-Game::Game(string filePath) {
-    grid = new Grid(filePath);
-    rule = new ClassicLifeRule();
-}*/
+Game::~Game() = default;
 
-Game::~Game(){
-    delete grid;
-    delete rule;
-}
-
-Grid* Game::getGrid(){return grid;}
+Grid* Game::getGrid(){return grid.get();}
 
 void Game::run(int stepNumber){
     for (int i = 0; i < stepNumber; i++){
@@ -24,4 +17,4 @@ void Game::run(int stepNumber){
     }
 }
 
-void Game::step(){grid->step(rule);}
+void Game::step(){grid->step(rule.get());}
