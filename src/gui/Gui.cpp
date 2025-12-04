@@ -42,7 +42,12 @@ Gui::Gui(string filePath, int cellSize){
     helpText.setCharacterSize(14);
     helpText.setFillColor(Color(128, 128, 128));
     helpText.setPosition(10, windowHeight - 25);
-    helpText.setString("Espace: Pause | ↑↓: Vitesse | →: Pas a pas (⚠ Mets en pause pour avancer pas a pas) | R: Reset");
+    helpText.setString(
+    "Espace: Pause/Play\n"
+    "↑↓: Vitesse\n"
+    "→: Pas a pas\n"
+    "⚠ Mets en pause pour avancer pas a pas\n"
+    "R: Reset");
 }
 
 Gui::~Gui() {
