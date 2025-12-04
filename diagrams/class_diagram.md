@@ -3,60 +3,72 @@ classDiagram
     %% --- Logique métier ---
 
     class Game {
-        - Grid grid
+        - Grid* grid
         - Rule* rule
 
         Game(int width, int height, int[][] grid)
-
+        ~Game()
+        + getGrid() Grid*
         + run(int stepNumber) void
         + step() void
-        + getGrid() Grid
     }
 
     class Grid {
-        - int width
-        - int height
+        - int columns
+        - int lines
         - Cell[][] cells
 
-        + Grid(int width, int height, int[][] grid)
-
-        + getCell(int x, int y) Cell&
-        + countAliveNeighbours(int x, int y) int
+        Grid(string filePath)
+        ~Grid()
+        + getCell(int line, int column) Cell&
+        + countAliveNeighbours(int line, int column) int
         + step(Rule* rule) void
     }
 
     class Cell {
         - CellState* state
 
-        + Cell()
-        + Cell(int state)
+        Cell()
+        Cell(int state)
+        Cell(CellState* initialState)
+        ~Cell()
 
         + setState(CellState* newState) void
+        + getState() const CellState*
     }
 
     class CellState {
         <<abstract>>
-        + virtual isAlive() bool*
-        + virtual symbol() char*
+        CellState()
+        virtual ~CellState()
+        + virtual isAlive() bool
+        + virtual symbol() char
+        + virtual value() int
+        + virtual canBeModified() bool
     }
 
     class AliveState {
         + isAlive() bool
         + symbol() char
+        + value() int
+        + canBeModified() bool
     }
 
     class DeadState {
         + isAlive() bool
         + symbol() char
+        + value() int
+        + canBeModified() bool
     }
 
     class Rule {
         <<abstract>>
-        + virtual computeNextState(Cell cell, int aliveNeighbours)* CellState*
+        + virtual computeNextState(Cell& cell, int aliveNeighbours)* CellState*
+        ~Rule()
     }
 
     class ClassicLifeRule {
-        + computeNextState(Cell cell, int aliveNeighbours) CellState*
+        + computeNextState(Cell& cell, int aliveNeighbours) CellState*
     }
 
     class Console {
@@ -78,10 +90,13 @@ classDiagram
         - bool paused
         - Font font    
         - Text statusText
+        - Text speedText
+        - Text helpText
         + Gui(string filePath, int cellSize)
         + ~Gui()
         + render() void
         + handleEvents() void
+        + reset() void
         + update() void
         + run() void
     }
