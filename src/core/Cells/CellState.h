@@ -2,8 +2,8 @@
 
 class CellState{
 public:
-    CellState();
-    virtual ~CellState(){}
+    CellState() = default;
+    virtual ~CellState() = default;
     virtual bool isAlive() = 0;
     virtual char symbol() = 0;
 };
