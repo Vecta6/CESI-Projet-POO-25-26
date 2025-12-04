@@ -4,15 +4,18 @@
 #include "../core/Rule/Rules/ClassicLifeRule.h"
 
 #include <vector>
+using namespace std;
 
 class Game{
     private:
-        Grid grid;
+        Grid* grid;
         Rule* rule;
     public:
-        Game(int width, int height, std::vector<std::vector<int>>& grid); 
+        Game(int width, int height, vector<vector<int>>& grid); 
+        ~Game();
+
         //getters
-        Grid getGrid(){return grid;}
+        Grid* getGrid();
 
         //methods
         void run(int stepNumber);
