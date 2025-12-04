@@ -1,10 +1,15 @@
 #pragma once
 
-#include <iostream>
-using namespace std;
+#include <string>
+#include <vector>
 
 class GestionFichier{
 public:
-    static string LireFicher(const string ChSource);
-    static void EcrireFichier(const string ChSource, const string Texte);
+    GestionFichier() = default;
+    ~GestionFichier() = default;
+
+    static std::string LireFichier(const std::string &ChSource);
+    static bool EcrireFichier(const std::string &ChSource, const std::string &Texte);
+
+    static bool LoadGrid(const std::string &path, std::vector<std::vector<int>> &grid, int &rows, int &cols);
 };
