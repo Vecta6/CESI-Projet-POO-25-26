@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../core/Game.h"
+#include "../GestionFichiers.h"
+#include "../utils/GridSerializer.h"
 
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Event.hpp>
@@ -13,8 +15,11 @@ using namespace std;
 
 class Gui {
     private:
+    string FilePath;
     Game* game;
     RenderWindow* window;
+    int Lines;
+    int Columns;
     int cellSize;          //pixels
     float iterationDelay;  //seconds
     Clock clock;
@@ -25,7 +30,7 @@ class Gui {
     Text helpText;
 
     public:
-        Gui(string filePath, int cellSize = 20);
+        Gui(string filePath);
         ~Gui();
 
         //methods

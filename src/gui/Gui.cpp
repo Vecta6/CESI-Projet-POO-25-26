@@ -4,13 +4,15 @@
 
 
 
-Gui::Gui(string filePath, int cellSize){
-    this->cellSize = cellSize;
+Gui::Gui(string filePath){
+    FilePath = filePath;
+    this->cellSize = 20;
     this->iterationDelay = 0.5f;       //default => 0.5 seconds
     this->paused = false;
 
     //Create a new game
-    game = new Game();  //mettre à jour selon nouveau constructeur
+    string initBoard = GestionFichier::LireFichier(filePath);
+    game = new Game(GridSerializer::load(initBoard, Lines, Columns));
 
     //Window size
     Grid* grid = game->getGrid();
@@ -135,7 +137,8 @@ void Gui::handleEvents() {
 
 void Gui::reset(){
     delete game;
-    game = new Game(); //Revoir selon nouveau constructeur
+    string initBoard = GestionFichier::LireFichier(FilePath);
+    game = new Game(GridSerializer::load(initBoard, Lines, Columns));
 }
 
 void Gui::update(){
