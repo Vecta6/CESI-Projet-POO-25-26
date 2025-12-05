@@ -34,7 +34,7 @@ int Grid::countAliveNeighbours(int line, int column) const {
         return mod < 0 ? mod + max : mod;
     };
 
-    // Voisinage avec grille torique (bords qui bouclent).
+    // Toroidal neighborhood (edges wrap around).
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
             if (i == 0 && j == 0) continue;
@@ -51,19 +51,19 @@ int Grid::countAliveNeighbours(int line, int column) const {
 }
 
 void Grid::step(Rule *rule) {
-    // Temporary copy of new states
+    // Buffer for the next generation states
     std::vector<std::vector<std::unique_ptr<CellState>>> newStates(lines);
 
     for (int i = 0; i < lines; i++) {
         newStates[i].resize(columns);
     }
 
-    // Calculate new states
+    // Compute next states
     for (int i = 0; i < lines; i++) {
         for (int j = 0; j < columns; j++) {
             CellState* currentState = cells[i][j].getState();
             if (!currentState->canBeModified()) {
-                // Conserve les obstacles (ou toute cellule non modifiable) à l'identique.
+                // Keep obstacles or locked cells unchanged.
                 switch (currentState->value()) {
                     case 2:
                         newStates[i][j] = std::make_unique<ObstacleDead>();
@@ -85,7 +85,7 @@ void Grid::step(Rule *rule) {
         }
     }
     
-    // Apply new states
+    // Commit the new states
     for (int i = 0; i < lines; i++) {
         for (int j = 0; j < columns; j++) {
             cells[i][j].setState(std::move(newStates[i][j]));

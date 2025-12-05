@@ -16,12 +16,12 @@ public:
     explicit Grid(const std::vector<std::vector<int>> &initialState);
     ~Grid() = default;
 
-    // Getters
+    // Accessors
     Cell &getCell(int line, int column);
     int getLines() const { return lines; }
     int getColumns() const { return columns; }
     
-    // Methods
+    // Simulation helpers
     int countAliveNeighbours(int line, int column) const;
     void step(Rule* rule);
 };

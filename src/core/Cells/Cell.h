@@ -9,7 +9,6 @@ private:
 public:
     Cell() = default;
     explicit Cell(int state);
-    explicit Cell(CellState* initialState) : state(initialState) {}
     ~Cell() = default;
 
     Cell(const Cell&) = delete;

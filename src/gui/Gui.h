@@ -15,8 +15,8 @@ private:
     std::unique_ptr<sf::RenderWindow> window;
     int Lines;
     int Columns;
-    int cellSize;          // pixels
-    float iterationDelay;  // seconds
+    int cellSize;          // cell size in pixels
+    float iterationDelay;  // delay between updates in seconds
     sf::Clock clock;
     bool paused;
     sf::Font font;

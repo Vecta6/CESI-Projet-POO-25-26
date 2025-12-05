@@ -17,11 +17,11 @@ std::vector<std::vector<int>> GridSerializer::load(const std::string &lines, int
     std::vector<std::vector<int>> grid(rows, std::vector<int>(cols, 0));
     bool incomplete = false;
 
-    // Reparse ligne par ligne pour éviter de "déborder" d'une ligne sur l'autre.
+    // Parse line by line to avoid bleeding values across rows.
     std::stringstream content(lines);
     std::string line;
 
-    // Saut de la première ligne (header déjà lu)
+    // Skip the header line already parsed
     std::getline(content, line);
 
     for (int r = 0; r < rows; r++) {
@@ -36,14 +36,14 @@ std::vector<std::vector<int>> GridSerializer::load(const std::string &lines, int
             if (rowStream >> value) {
                 grid[r][c] = value;
             } else {
-                // Manque des valeurs sur la ligne : compléter par 0 et signaler.
+                // Pad missing values with 0 and mark the input as incomplete.
                 incomplete = true;
                 grid[r][c] = 0;
             }
         }
     }
 
-    (void)incomplete; // on ignore l'avertissement pour éviter le bruit console
+    (void)incomplete; // keep the flag for future logging without triggering warnings
 
     return grid;
 }

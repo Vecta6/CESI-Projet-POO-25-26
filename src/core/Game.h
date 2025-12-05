@@ -12,10 +12,10 @@ class Game{
         explicit Game(const std::vector<std::vector<int>> &gridData);
         ~Game();
 
-        //getters
+        // Accessors
         Grid* getGrid();
 
-        //methods
+        // Simulation control
         void run(int stepNumber);
         void step();
 };

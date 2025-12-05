@@ -43,3 +43,27 @@ add_executable(CESI-Projet-POO-25-26 main.cpp
         src/core/GestionFichiers.h)
 
 target_link_libraries(CESI-Projet-POO-25-26 PRIVATE ${SFML_LIBRARIES})
+
+add_executable(core-tests
+        tests/CoreTests.cpp
+        src/core/Grid.cpp
+        src/core/Grid.h
+        src/core/Game.cpp
+        src/core/Game.h
+        src/core/utils/GridSerializer.cpp
+        src/core/utils/GridSerializer.h
+        src/core/Rule/Rule.cpp
+        src/core/Rule/Rule.h
+        src/core/Rule/Rules/ClassicLifeRule.cpp
+        src/core/Rule/Rules/ClassicLifeRule.h
+        src/core/Cells/Cell.cpp
+        src/core/Cells/Cell.h
+        src/core/Cells/CellState.h
+        src/core/Cells/CellStates/AliveState.cpp
+        src/core/Cells/CellStates/AliveState.h
+        src/core/Cells/CellStates/DeadState.cpp
+        src/core/Cells/CellStates/DeadState.h
+        src/core/Cells/CellStates/ObstacleAlive.cpp
+        src/core/Cells/CellStates/ObstacleAlive.h
+        src/core/Cells/CellStates/ObstacleDead.cpp
+        src/core/Cells/CellStates/ObstacleDead.h)
