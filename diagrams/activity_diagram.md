@@ -1,6 +1,6 @@
 ```mermaid
 flowchart TD
-    Start([Démarrage]) --> InputMode[Demander le mode<br/>c = console, g = graphique]
+    Start([Démarrage]) --> InputMode[Demander le mode<br/>c = console<br/> g = graphique]
     InputMode --> ReadMode[Lire le mode]
     ReadMode --> InputFile[Demander le chemin du fichier]
     InputFile --> ReadFile[Lire le chemin]

@@ -93,7 +93,6 @@ classDiagram
 
         Console(string &filePath, int steps)
         Console(string &filePath)
-        ~Console()
 
         + run() void
         + showCurrentGrid() void
