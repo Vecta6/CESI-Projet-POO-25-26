@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.31)
 project(CESI-Projet-POO-25-26)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -23,4 +23,11 @@ add_executable(CESI-Projet-POO-25-26 main.cpp
         src/core/Cells/CellStates/AliveState.h
         src/core/Cells/CellStates/DeadState.cpp
         src/core/Cells/CellStates/DeadState.h
-        src/core/GestionFichiers.cpp)
+        src/core/Cells/CellStates/ObstacleAlive.cpp
+        src/core/Cells/CellStates/ObstacleAlive.h
+        src/core/Cells/CellStates/ObstacleDead.cpp
+        src/core/Cells/CellStates/ObstacleDead.h
+        src/core/utils/GridSerializer.cpp
+        src/core/utils/GridSerializer.h
+        src/core/GestionFichiers.cpp
+        src/core/GestionFichiers.h)
