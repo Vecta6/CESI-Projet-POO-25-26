@@ -45,6 +45,7 @@ Controls:
 - Up / Down: speed -/+ (seconds per step)
 - Right: single step when paused
 - R: reset to initial grid (pauses)
+
 Window clamps to ~90% of the desktop; HUD shows status and speed.
 
 ### Project structure
@@ -116,6 +117,7 @@ Contrôles :
 - Haut / Bas : vitesse -/+
 - Droite : un pas quand en pause
 - R : réinitialise la grille (et met en pause)
+
 La fenêtre est limitée à ~90 % de l’écran ; le HUD montre l’état et la vitesse.
 
 ### Structure du projet
