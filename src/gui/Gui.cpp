@@ -13,15 +13,7 @@ Gui::Gui(const std::string &filePath)
       Columns(0),
       cellSize(20),
       iterationDelay(0.5f),
-      paused(false),
-      statusText(font, "PLAY", 20),       // emoji retirés pour éviter les symboles manquants
-      speedText(font, "Vitesse: 0.5s", 18),
-      helpText(font,
-               "Espace: Pause/Play\n"
-               "Haut/Bas: Vitesse\n"
-               "Droite: Pas a pas (en pause)\n"
-               "R: Reset",
-               14) {
+      paused(false) {
     std::string initBoard = GestionFichier::LireFichier(filePath);
     game = std::make_unique<Game>(GridSerializer::load(initBoard, Lines, Columns));
 
@@ -38,8 +30,8 @@ Gui::Gui(const std::string &filePath)
     const int windowHeight = std::max(gridHeight + hudHeight, minHeight);
 
     window = std::make_unique<sf::RenderWindow>(
-        sf::VideoMode(sf::Vector2u(static_cast<unsigned int>(windowWidth),
-                                   static_cast<unsigned int>(windowHeight))),
+        sf::VideoMode(static_cast<unsigned int>(windowWidth),
+                      static_cast<unsigned int>(windowHeight)),
         "Jeu de la Vie");
     window->setFramerateLimit(60);
 
@@ -51,7 +43,7 @@ Gui::Gui(const std::string &filePath)
     };
     bool fontLoaded = false;
     for (const auto &candidate : candidates) {
-        if (font.openFromFile(candidate)) {
+        if (font.loadFromFile(candidate)) {
             fontLoaded = true;
             break;
         }
@@ -61,12 +53,21 @@ Gui::Gui(const std::string &filePath)
     }
 
     const float hudTop = static_cast<float>(gridHeight) + 10.f;
+    statusText.setFont(font);
+    statusText.setCharacterSize(20);
+    statusText.setString("PLAY");
     statusText.setFillColor(sf::Color::Green);
     statusText.setPosition(sf::Vector2f(10.f, hudTop));
 
+    speedText.setFont(font);
+    speedText.setCharacterSize(18);
+    speedText.setString("Vitesse: 0.5s");
     speedText.setFillColor(sf::Color::Black);
     speedText.setPosition(sf::Vector2f(10.f, hudTop + 28.f));
 
+    helpText.setFont(font);
+    helpText.setCharacterSize(14);
+    helpText.setString("Espace: Pause/Play\nHaut/Bas: Vitesse\nDroite: Pas a pas (en pause)\nR: Reset");
     helpText.setFillColor(sf::Color(80, 80, 80));
     helpText.setPosition(sf::Vector2f(10.f, hudTop + 56.f));
 }
@@ -118,37 +119,36 @@ void Gui::render() {
 }
 
 void Gui::handleEvents() {
-    while (auto eventOpt = window->pollEvent()) {
-        const auto &event = *eventOpt;
-
-        if (event.is<sf::Event::Closed>()) {
+    sf::Event event;
+    while (window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
             window->close();
         }
 
-        if (const auto *key = event.getIf<sf::Event::KeyPressed>()) {
-            const auto code = key->code;
-            if (code == sf::Keyboard::Key::Up) {
+        if (event.type == sf::Event::KeyPressed) {
+            const auto code = event.key.code;
+            if (code == sf::Keyboard::Up) {
                 iterationDelay -= 0.1f;
                 if (iterationDelay < 0.1f) iterationDelay = 0.1f;
                 std::ostringstream oss;
                 oss << "Vitesse: " << iterationDelay << "s";
                 speedText.setString(oss.str());
 
-            } else if (code == sf::Keyboard::Key::Down) {
+            } else if (code == sf::Keyboard::Down) {
                 iterationDelay += 0.1f;
                 std::ostringstream oss;
                 oss << "Vitesse: " << iterationDelay << "s";
                 speedText.setString(oss.str());
 
-            } else if (code == sf::Keyboard::Key::Space) {
+            } else if (code == sf::Keyboard::Space) {
                 paused = !paused;
                 statusText.setString(paused ? "PAUSE" : "PLAY");
                 statusText.setFillColor(paused ? sf::Color::Red : sf::Color::Green);
-            } else if (code == sf::Keyboard::Key::Right) {
+            } else if (code == sf::Keyboard::Right) {
                 if (paused) {
                     game->step();
                 }
-            } else if (code == sf::Keyboard::Key::R) {
+            } else if (code == sf::Keyboard::R) {
                 reset();
                 paused = true;
                 statusText.setString("PAUSE");
