@@ -1,5 +1,6 @@
 #include "Grid.h"
 #include "Cells/CellState.h"
+#include "Rule/Rule.h"
 #include <vector>
 #include <memory>
 
@@ -24,21 +25,21 @@ Cell &Grid::getCell(int line, int column) {
 int Grid::countAliveNeighbours(int line, int column) const {
     int count = 0;
 
-    // Run through the 8 neighbours
+    auto wrap = [](int idx, int max) {
+        const int mod = idx % max;
+        return mod < 0 ? mod + max : mod;
+    };
+
+    // Voisinage avec grille torique (bords qui bouclent).
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
             if (i == 0 && j == 0) continue;
 
-            const int neighbourLine = line + i;
-            const int neighbourColumn = column + j;
+            const int neighbourLine = wrap(line + i, lines);
+            const int neighbourColumn = wrap(column + j, columns);
 
-            // Check the grid limits
-            if (neighbourLine >= 0 && neighbourLine < lines && neighbourColumn >= 0 && neighbourColumn < columns) {
-
-                // Increment the counter when a neighbour is alive
-                if (cells[neighbourLine][neighbourColumn].getState()->isAlive()) {
-                    count++;
-                }
+            if (cells[neighbourLine][neighbourColumn].getState()->isAlive()) {
+                count++;
             }
         }
     }
