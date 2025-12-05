@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Cells/Cell.h"
-#include "Rule/Rule.h"
 #include <vector>
+
+#include "Cells/Cell.h"
+
+class Rule;
 
 class Grid {
 private:
