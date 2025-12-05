@@ -4,10 +4,6 @@ bool AliveState::isAlive() {
     return true;
 }
 
-char32_t AliveState::symbol() {
-    return U'■';
-}
-
 int AliveState::value() {
     return 1;
 }
