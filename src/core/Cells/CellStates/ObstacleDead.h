@@ -2,7 +2,7 @@
 
 #include "../CellState.h"
 
-class ObstacleState:public CellState{
+class ObstacleDead:public CellState{
 public:
     bool isAlive() override;
     char32_t symbol() override;

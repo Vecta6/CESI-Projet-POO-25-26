@@ -78,6 +78,12 @@ void Gui::render() {
             else if (cell.getState()->value() == 0) { //Dead cell
                 rectangle.setFillColor(Color::White);
             }
+            else if (cell.getState()->value() == 2) { //Dead obstacle
+                rectangle.setFillColor(Color(128, 128, 128));
+            }
+            else if (cell.getState()->value() == 3) { //Alive obstacle
+                rectangle.setFillColor(Color(144, 238, 144));
+            }
             
             window->draw(rectangle);
         }

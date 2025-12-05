@@ -1,6 +1,8 @@
 #include "Cell.h"
 #include "CellStates/AliveState.h"
 #include "CellStates/DeadState.h"
+#include "CellStates/ObstacleAlive.h"
+#include "CellStates/ObstacleDead.h"
 #include <memory>
 
 Cell::Cell(int initial) : state(nullptr) {
@@ -8,7 +10,12 @@ Cell::Cell(int initial) : state(nullptr) {
         case 1:
             state = std::make_unique<AliveState>();
             break;
-        case 0:
+        case 2:
+            state = std::make_unique<ObstacleDead>();
+            break;
+        case 3:
+            state = std::make_unique<ObstacleAlive>();
+            break;
         default:
             state = std::make_unique<DeadState>();
             break;
