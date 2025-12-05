@@ -1,7 +1,3 @@
-//
-// Created by nathan on 02/12/2025.
-//
-
 #pragma once
 #ifndef CESI_PROJECT_POO_25_26_RULE_H
 #define CESI_PROJECT_POO_25_26_RULE_H
@@ -16,4 +12,4 @@ public:
 };
 
 
-#endif //CESI_PROJECT_POO_25_26_RULE_H
+#endif  // CESI_PROJECT_POO_25_26_RULE_H

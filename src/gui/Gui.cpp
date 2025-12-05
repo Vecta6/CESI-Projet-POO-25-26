@@ -18,13 +18,13 @@ Gui::Gui(const std::string &filePath)
     std::string initBoard = GestionFichier::LireFichier(filePath);
     game = std::make_unique<Game>(GridSerializer::load(initBoard, Lines, Columns));
 
-    // Dimensions de la fenêtre
-    const int hudHeight = 180;  // espace suffisant pour le texte
+    // Window sizing parameters
+    const int hudHeight = 180;  // room for HUD text
     const int minWidth = 480;
     const int minHeight = 360;
 
     Grid *grid = game->getGrid();
-    // Adapte la taille des cellules pour que la fenêtre reste dans l'écran.
+    // Adjust cell size to keep the window within the visible desktop.
     const auto desktop = sf::VideoMode::getDesktopMode();
     const int maxWindowWidth = static_cast<int>(desktop.width * 0.9f);
     const int maxWindowHeight = static_cast<int>(desktop.height * 0.9f);
@@ -33,7 +33,7 @@ Gui::Gui(const std::string &filePath)
         grid->getLines() > 0 ? (maxWindowHeight - hudHeight) / grid->getLines() : cellSize;
     if (maxCellW > 0 && maxCellH > 0) {
         cellSize = std::min({cellSize, maxCellW, maxCellH});
-        cellSize = std::max(cellSize, 4);  // taille minimale lisible
+        cellSize = std::max(cellSize, 4);  // minimum legible size
     }
 
     const int gridWidth = grid->getColumns() * cellSize;
@@ -48,15 +48,15 @@ Gui::Gui(const std::string &filePath)
         "Jeu de la Vie");
     window->setFramerateLimit(60);
 
-    // Charge d'abord la police fournie avec le projet, puis différents chemins système.
+    // Try the bundled font first, then common system font paths.
     const std::vector<std::string> candidates = {
-        "resources/fonts/DejaVuSans.ttf",            // depuis la racine du projet
-        "../resources/fonts/DejaVuSans.ttf",         // depuis le dossier build
+        "resources/fonts/DejaVuSans.ttf",            // project root
+        "../resources/fonts/DejaVuSans.ttf",         // from build directory
         "fonts/DejaVuSans.ttf",
         "../fonts/DejaVuSans.ttf",
         "/usr/share/fonts/TTF/DejaVuSans.ttf",                        // Arch/Manjaro
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",            // Debian/Ubuntu
-        "/usr/share/fonts/dejavu/DejaVuSans.ttf",                     // Générique
+        "/usr/share/fonts/dejavu/DejaVuSans.ttf",                     // Generic Linux
         "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",        // Noto
         "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf",              // Ubuntu
         "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",  // Fedora/RedHat
@@ -106,7 +106,7 @@ void Gui::render() {
     Grid *grid = game->getGrid();
     const int gridHeight = grid->getLines() * cellSize;
 
-    // Draw each cell
+    // Render each cell
     for (int i = 0; i < grid->getLines(); i++) {
         for (int j = 0; j < grid->getColumns(); j++) {
             Cell &cell = grid->getCell(i, j);
@@ -130,7 +130,7 @@ void Gui::render() {
         }
     }
 
-    // Bandeau HUD pour lisibilité
+    // HUD background for readability
     const float hudStart = static_cast<float>(gridHeight);
     sf::RectangleShape hudBg(
         sf::Vector2f(static_cast<float>(window->getSize().x), window->getSize().y - hudStart));
