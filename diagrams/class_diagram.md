@@ -6,7 +6,7 @@ classDiagram
         - Grid* grid
         - Rule* rule
 
-        Game(int width, int height, int[][] grid)
+        Game(int[][] &gridData)
         ~Game()
         + getGrid() Grid*
         + run(int stepNumber) void
@@ -18,9 +18,11 @@ classDiagram
         - int lines
         - Cell[][] cells
 
-        Grid(string filePath)
+        Grid(int[][] &initialState)
         ~Grid()
         + getCell(int line, int column) Cell&
+        + getLines() int
+        + getColumns() int
         + countAliveNeighbours(int line, int column) int
         + step(Rule* rule) void
     }
@@ -42,21 +44,30 @@ classDiagram
         CellState()
         virtual ~CellState()
         + virtual isAlive() bool
-        + virtual symbol() char
         + virtual value() int
         + virtual canBeModified() bool
     }
 
     class AliveState {
         + isAlive() bool
-        + symbol() char
         + value() int
         + canBeModified() bool
     }
 
     class DeadState {
         + isAlive() bool
-        + symbol() char
+        + value() int
+        + canBeModified() bool
+    }
+
+    class ObstacleAlive{
+        + isAlive() bool
+        + value() int
+        + canBeModified() bool
+    }
+
+    class ObstacleDead{
+        + isAlive() bool
         + value() int
         + canBeModified() bool
     }
@@ -72,18 +83,29 @@ classDiagram
     }
 
     class Console {
-        # Game game
+        - Game* game
+        - int maxIterations
+        - path inputFile 
+        - path outputDirectory
+        - initializeFromFile() void
+        - captureGridState() const int[][]       
+        - writeStateToFile(const int[][] &state, int iteration) const void
 
-        Console(string filePath, int steps)
-        Console(string filePath)
+        Console(string &filePath, int steps)
+        Console(string &filePath)
+        ~Console()
 
-        + virtual showCurrentGrid() void
+        + run() void
+        + showCurrentGrid() void
 
     }
 
     class Gui {
+        - string filePath
         - Game* game
         - RenderWindow* window
+        - int Lines
+        - int Columns
         - int cellSize
         - float iterationDelay
         - Clock clock
@@ -92,8 +114,10 @@ classDiagram
         - Text statusText
         - Text speedText
         - Text helpText
-        + Gui(string filePath, int cellSize)
-        + ~Gui()
+
+        Gui(string filePath, int cellSize)
+        ~Gui()
+
         + render() void
         + handleEvents() void
         + reset() void
@@ -103,17 +127,19 @@ classDiagram
 
     %% --- Relations ---
 
-    Game --> Grid : possède
-    Game --> Rule : utilise
+    Game o-- Grid 
+    Game o-- Rule 
 
-    Grid "1" o-- "many" Cell
+    Grid  o-- Cell
     Cell o-- CellState
 
     CellState <|-- AliveState
     CellState <|-- DeadState
+    CellState <|-- ObstacleAlive
+    CellState <|-- ObstacleDead
 
     Rule <|-- ClassicLifeRule
     Console o-- Game
-    Gui --|> Console
+    Gui o-- Game
 
 ```
