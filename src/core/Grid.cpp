@@ -1,5 +1,9 @@
 #include "Grid.h"
 #include "Cells/CellState.h"
+#include "Cells/CellStates/AliveState.h"
+#include "Cells/CellStates/DeadState.h"
+#include "Cells/CellStates/ObstacleAlive.h"
+#include "Cells/CellStates/ObstacleDead.h"
 #include "Rule/Rule.h"
 #include <vector>
 #include <memory>
@@ -57,6 +61,25 @@ void Grid::step(Rule *rule) {
     // Calculate new states
     for (int i = 0; i < lines; i++) {
         for (int j = 0; j < columns; j++) {
+            CellState* currentState = cells[i][j].getState();
+            if (!currentState->canBeModified()) {
+                // Conserve les obstacles (ou toute cellule non modifiable) à l'identique.
+                switch (currentState->value()) {
+                    case 2:
+                        newStates[i][j] = std::make_unique<ObstacleDead>();
+                        break;
+                    case 3:
+                        newStates[i][j] = std::make_unique<ObstacleAlive>();
+                        break;
+                    default:
+                        newStates[i][j] = std::unique_ptr<CellState>(
+                            currentState->isAlive() ? static_cast<CellState*>(new AliveState())
+                                                    : static_cast<CellState*>(new DeadState()));
+                        break;
+                }
+                continue;
+            }
+
             int aliveNeighbours = countAliveNeighbours(i, j);
             newStates[i][j].reset(rule->computeNextState(cells[i][j], aliveNeighbours));
         }
