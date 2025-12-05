@@ -35,12 +35,20 @@ Gui::Gui(const std::string &filePath)
         "Jeu de la Vie");
     window->setFramerateLimit(60);
 
-    // Essai multi-chemins pour compat Arch/Debian/Ubuntu.
+    // Cherche une police "basique" courante sur Linux/Windows/macOS pour éviter les erreurs.
     const std::string candidates[] = {
-        "/usr/share/fonts/TTF/DejaVuSans.ttf",                  // Arch/Manjaro
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",      // Debian/Ubuntu
-        "/usr/share/fonts/dejavu/DejaVuSans.ttf"                // Générique
+        "/usr/share/fonts/TTF/DejaVuSans.ttf",                        // Arch/Manjaro
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",            // Debian/Ubuntu
+        "/usr/share/fonts/dejavu/DejaVuSans.ttf",                     // Générique
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",        // Noto
+        "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf",              // Ubuntu
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",  // Fedora/RedHat
+        "/usr/share/fonts/truetype/freefont/FreeSans.ttf",            // FreeSans
+        "/System/Library/Fonts/Supplemental/Arial.ttf",               // macOS
+        "/Library/Fonts/Arial.ttf",                                   // macOS (fallback)
+        "C:/Windows/Fonts/arial.ttf"                                  // Windows
     };
+
     bool fontLoaded = false;
     for (const auto &candidate : candidates) {
         if (font.loadFromFile(candidate)) {
@@ -49,7 +57,7 @@ Gui::Gui(const std::string &filePath)
         }
     }
     if (!fontLoaded) {
-        std::cout << "Erreur : impossible de charger la police (DejaVuSans)\n";
+        std::cout << "Erreur : aucune police systeme standard n'a pu etre chargee.\n";
     }
 
     const float hudTop = static_cast<float>(gridHeight) + 10.f;
