@@ -24,11 +24,23 @@ Gui::Gui(const std::string &filePath)
     const int minHeight = 360;
 
     Grid *grid = game->getGrid();
+    // Adapte la taille des cellules pour que la fenêtre reste dans l'écran.
+    const auto desktop = sf::VideoMode::getDesktopMode();
+    const int maxWindowWidth = static_cast<int>(desktop.width * 0.9f);
+    const int maxWindowHeight = static_cast<int>(desktop.height * 0.9f);
+    const int maxCellW = grid->getColumns() > 0 ? maxWindowWidth / grid->getColumns() : cellSize;
+    const int maxCellH =
+        grid->getLines() > 0 ? (maxWindowHeight - hudHeight) / grid->getLines() : cellSize;
+    if (maxCellW > 0 && maxCellH > 0) {
+        cellSize = std::min({cellSize, maxCellW, maxCellH});
+        cellSize = std::max(cellSize, 4);  // taille minimale lisible
+    }
+
     const int gridWidth = grid->getColumns() * cellSize;
     const int gridHeight = grid->getLines() * cellSize;
 
-    const int windowWidth = std::max(gridWidth, minWidth);
-    const int windowHeight = std::max(gridHeight + hudHeight, minHeight);
+    const int windowWidth = std::min(std::max(gridWidth, minWidth), maxWindowWidth);
+    const int windowHeight = std::min(std::max(gridHeight + hudHeight, minHeight), maxWindowHeight);
 
     window = std::make_unique<sf::RenderWindow>(
         sf::VideoMode(static_cast<unsigned int>(windowWidth),
