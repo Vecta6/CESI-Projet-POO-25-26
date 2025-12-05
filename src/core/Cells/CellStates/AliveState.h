@@ -4,6 +4,8 @@
 
 class AliveState:public CellState{
 public:
-    bool isAlive() override {return true;}
-    char symbol() override {return '■';}
+    bool isAlive() override;
+    char32_t symbol() override;
+    int value() override;
+    bool canBeModified() override;
 };

@@ -1,26 +1,25 @@
 #pragma once
+
 #include "Cells/Cell.h"
 #include "Rule/Rule.h"
 #include <vector>
-#include <iostream>
-using namespace std;
 
 class Grid {
 private:
     int columns;
     int lines;
-    vector<vector<Cell*>> cells;
+    std::vector<std::vector<Cell>> cells;
 
 public:
-    Grid(string filePath);
-    ~Grid();
+    explicit Grid(const std::vector<std::vector<int>> &initialState);
+    ~Grid() = default;
 
     // Getters
-    Cell& getCell(int line, int column);
-    int getLines() const {return lines;}
-    int getColumns() const {return columns;}
+    Cell &getCell(int line, int column);
+    int getLines() const { return lines; }
+    int getColumns() const { return columns; }
     
     // Methods
-    int countAliveNeighbours(int line, int column);
-    void step(Rule* rule);
+    int countAliveNeighbours(int line, int column) const;
+    void step(Rule *rule);
 };

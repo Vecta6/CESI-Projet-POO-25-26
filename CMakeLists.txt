@@ -22,4 +22,5 @@ add_executable(CESI-Projet-POO-25-26 main.cpp
         src/core/Cells/CellStates/AliveState.cpp
         src/core/Cells/CellStates/AliveState.h
         src/core/Cells/CellStates/DeadState.cpp
-        src/core/Cells/CellStates/DeadState.h)
+        src/core/Cells/CellStates/DeadState.h
+        src/core/GestionFichiers.cpp)
