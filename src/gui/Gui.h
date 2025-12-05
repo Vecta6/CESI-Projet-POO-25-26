@@ -4,39 +4,33 @@
 #include "../core/GestionFichiers.h"
 #include "../core/utils/GridSerializer.h"
 
-#include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/Graphics.hpp>    
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <iostream>
-using namespace sf;
-using namespace std;
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include <string>
 
 class Gui {
-    private:
-    string FilePath;
-    Game* game;
-    RenderWindow* window;
+private:
+    std::string filePath;
+    std::unique_ptr<Game> game;
+    std::unique_ptr<sf::RenderWindow> window;
     int Lines;
     int Columns;
-    int cellSize;          //pixels
-    float iterationDelay;  //seconds
-    Clock clock;
+    int cellSize;          // pixels
+    float iterationDelay;  // seconds
+    sf::Clock clock;
     bool paused;
-    Font font;       
-    Text statusText;
-    Text speedText;
-    Text helpText;
+    sf::Font font;
+    sf::Text statusText;
+    sf::Text speedText;
+    sf::Text helpText;
 
-    public:
-        Gui(string filePath);
-        ~Gui();
+public:
+    explicit Gui(const std::string &filePath);
+    ~Gui();
 
-        //methods
-        void render();
-        void handleEvents();
-        void reset();
-        void update();
-        void run();
+    void render();
+    void handleEvents();
+    void reset();
+    void update();
+    void run();
 };

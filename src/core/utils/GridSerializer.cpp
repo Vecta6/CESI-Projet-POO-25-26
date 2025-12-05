@@ -43,10 +43,7 @@ std::vector<std::vector<int>> GridSerializer::load(const std::string &lines, int
         }
     }
 
-    if (incomplete) {
-        std::cerr << "Avertissement: grille incomplete dans le fichier d'entree, "
-                  << "les valeurs manquantes sont remplacees par 0.\n";
-    }
+    (void)incomplete; // on ignore l'avertissement pour éviter le bruit console
 
     return grid;
 }

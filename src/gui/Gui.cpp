@@ -1,161 +1,177 @@
 #include "Gui.h"
-#include <SFML/Window/Keyboard.hpp>
+
 #include <SFML/Window/Event.hpp>
+#include <algorithm>
+#include <iostream>
+#include <sstream>
 
+Gui::Gui(const std::string &filePath)
+    : filePath(filePath),
+      game(nullptr),
+      window(nullptr),
+      Lines(0),
+      Columns(0),
+      cellSize(20),
+      iterationDelay(0.5f),
+      paused(false),
+      statusText(font, "PLAY", 20),       // emoji retirés pour éviter les symboles manquants
+      speedText(font, "Vitesse: 0.5s", 18),
+      helpText(font,
+               "Espace: Pause/Play\n"
+               "Haut/Bas: Vitesse\n"
+               "Droite: Pas a pas (en pause)\n"
+               "R: Reset",
+               14) {
+    std::string initBoard = GestionFichier::LireFichier(filePath);
+    game = std::make_unique<Game>(GridSerializer::load(initBoard, Lines, Columns));
 
+    // Dimensions de la fenêtre
+    const int hudHeight = 180;  // espace suffisant pour le texte
+    const int minWidth = 480;
+    const int minHeight = 360;
 
-Gui::Gui(string filePath){
-    FilePath = filePath;
-    this->cellSize = 20;
-    this->iterationDelay = 0.5f;       //default => 0.5 seconds
-    this->paused = false;
+    Grid *grid = game->getGrid();
+    const int gridWidth = grid->getColumns() * cellSize;
+    const int gridHeight = grid->getLines() * cellSize;
 
-    //Create a new game
-    string initBoard = GestionFichier::LireFichier(filePath);
-    game = new Game(GridSerializer::load(initBoard, Lines, Columns));
+    const int windowWidth = std::max(gridWidth, minWidth);
+    const int windowHeight = std::max(gridHeight + hudHeight, minHeight);
 
-    //Window size
-    Grid* grid = game->getGrid();
-    int windowWidth = grid->getColumns() * cellSize;
-    int windowHeight = grid->getLines() * cellSize;
-
-    //Create the window
-    window = new RenderWindow(VideoMode(windowWidth, windowHeight),"Jeu de la Vie");
+    window = std::make_unique<sf::RenderWindow>(
+        sf::VideoMode(sf::Vector2u(static_cast<unsigned int>(windowWidth),
+                                   static_cast<unsigned int>(windowHeight))),
+        "Jeu de la Vie");
     window->setFramerateLimit(60);
 
-    if (!font.loadFromFile("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")) {
-        cout << "Erreur : impossible de charger la police" << endl;
+    // Essai multi-chemins pour compat Arch/Debian/Ubuntu.
+    const std::string candidates[] = {
+        "/usr/share/fonts/TTF/DejaVuSans.ttf",                  // Arch/Manjaro
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",      // Debian/Ubuntu
+        "/usr/share/fonts/dejavu/DejaVuSans.ttf"                // Générique
+    };
+    bool fontLoaded = false;
+    for (const auto &candidate : candidates) {
+        if (font.openFromFile(candidate)) {
+            fontLoaded = true;
+            break;
+        }
     }
-    
-    //Config texts
-    statusText.setFont(font);
-    statusText.setCharacterSize(20);
-    statusText.setFillColor(Color::Green);
-    statusText.setPosition(10, 10);
-    statusText.setString("▶ PLAY");
+    if (!fontLoaded) {
+        std::cout << "Erreur : impossible de charger la police (DejaVuSans)\n";
+    }
 
-    speedText.setFont(font);
-    speedText.setCharacterSize(18);
-    speedText.setFillColor(Color::Black);
-    speedText.setPosition(10, 40);  
-    speedText.setString("Vitesse: 0.5s");
+    const float hudTop = static_cast<float>(gridHeight) + 10.f;
+    statusText.setFillColor(sf::Color::Green);
+    statusText.setPosition(sf::Vector2f(10.f, hudTop));
 
-    helpText.setFont(font);
-    helpText.setCharacterSize(14);
-    helpText.setFillColor(Color(128, 128, 128));
-    helpText.setPosition(10, windowHeight - 25);
-    helpText.setString(
-    "Espace: Pause/Play\n"
-    "↑↓: Vitesse\n"
-    "→: Pas a pas\n"
-    "⚠ Mets en pause pour avancer pas a pas\n"
-    "R: Reset");
+    speedText.setFillColor(sf::Color::Black);
+    speedText.setPosition(sf::Vector2f(10.f, hudTop + 28.f));
+
+    helpText.setFillColor(sf::Color(80, 80, 80));
+    helpText.setPosition(sf::Vector2f(10.f, hudTop + 56.f));
 }
 
-Gui::~Gui() {
-    delete game;
-    delete window;
-}
+Gui::~Gui() = default;
 
 void Gui::render() {
-    window->clear(Color::White);
-    
-    Grid* grid = game->getGrid();
+    window->clear(sf::Color::White);
 
-    //Draw each cell
+    Grid *grid = game->getGrid();
+    const int gridHeight = grid->getLines() * cellSize;
+
+    // Draw each cell
     for (int i = 0; i < grid->getLines(); i++) {
         for (int j = 0; j < grid->getColumns(); j++) {
-            Cell& cell = grid->getCell(i, j);
-            
-            //Rectangle for the cell
-            RectangleShape rectangle(Vector2f(cellSize - 1, cellSize - 1));
-            rectangle.setPosition(j * cellSize, i * cellSize);
-            
-            //Color of the cell
-            if (cell.getState()->value() == 1) {        //Alive cell
-                rectangle.setFillColor(Color::Black);
-            } 
-            else if (cell.getState()->value() == 0) { //Dead cell
-                rectangle.setFillColor(Color::White);
+            Cell &cell = grid->getCell(i, j);
+
+            sf::RectangleShape rectangle(sf::Vector2f(static_cast<float>(cellSize - 1),
+                                                      static_cast<float>(cellSize - 1)));
+            rectangle.setPosition(
+                sf::Vector2f(static_cast<float>(j * cellSize), static_cast<float>(i * cellSize)));
+
+            if (cell.getState()->value() == 1) {
+                rectangle.setFillColor(sf::Color::Black);
+            } else if (cell.getState()->value() == 0) {
+                rectangle.setFillColor(sf::Color::White);
+            } else if (cell.getState()->value() == 2) {
+                rectangle.setFillColor(sf::Color(128, 128, 128));
+            } else if (cell.getState()->value() == 3) {
+                rectangle.setFillColor(sf::Color(144, 238, 144));
             }
-            else if (cell.getState()->value() == 2) { //Dead obstacle
-                rectangle.setFillColor(Color(128, 128, 128));
-            }
-            else if (cell.getState()->value() == 3) { //Alive obstacle
-                rectangle.setFillColor(Color(144, 238, 144));
-            }
-            
+
             window->draw(rectangle);
         }
     }
-    //Draw texts
-    window->draw(statusText);   
+
+    // Bandeau HUD pour lisibilité
+    const float hudStart = static_cast<float>(gridHeight);
+    sf::RectangleShape hudBg(
+        sf::Vector2f(static_cast<float>(window->getSize().x), window->getSize().y - hudStart));
+    hudBg.setPosition(sf::Vector2f(0.f, hudStart));
+    hudBg.setFillColor(sf::Color(245, 245, 245));
+    window->draw(hudBg);
+
+    window->draw(statusText);
     window->draw(speedText);
     window->draw(helpText);
-    window->display();  //End the current frame and display its contents on screen
+    window->display();
 }
 
 void Gui::handleEvents() {
-    Event event;
-    while (window->pollEvent(event)){
-        if (event.type == Event::Closed){
+    while (auto eventOpt = window->pollEvent()) {
+        const auto &event = *eventOpt;
+
+        if (event.is<sf::Event::Closed>()) {
             window->close();
         }
-        
-        //Iteration speed control
-        if (event.type == Event::KeyPressed){
-            if (event.key.code == Keyboard::Up){
+
+        if (const auto *key = event.getIf<sf::Event::KeyPressed>()) {
+            const auto code = key->code;
+            if (code == sf::Keyboard::Key::Up) {
                 iterationDelay -= 0.1f;
                 if (iterationDelay < 0.1f) iterationDelay = 0.1f;
-                 speedText.setString("Vitesse: " + to_string(iterationDelay) + "s");
-                
-            }
-            else if (event.key.code == Keyboard::Down){
+                std::ostringstream oss;
+                oss << "Vitesse: " << iterationDelay << "s";
+                speedText.setString(oss.str());
+
+            } else if (code == sf::Keyboard::Key::Down) {
                 iterationDelay += 0.1f;
-                speedText.setString("Vitesse: " + to_string(iterationDelay) + "s");
-                
-            }
-            else if (event.key.code == Keyboard::Space){
-                //Pause/Play
+                std::ostringstream oss;
+                oss << "Vitesse: " << iterationDelay << "s";
+                speedText.setString(oss.str());
+
+            } else if (code == sf::Keyboard::Key::Space) {
                 paused = !paused;
-                if (paused){
-                    statusText.setString("⏸ PAUSE");
-                    statusText.setFillColor(Color::Red);
-                } else {
-                    statusText.setString("▶ PLAY");
-                    statusText.setFillColor(Color::Green);
-                }
-            }
-            else if (event.key.code == Keyboard::Right){
-                if (paused){
+                statusText.setString(paused ? "PAUSE" : "PLAY");
+                statusText.setFillColor(paused ? sf::Color::Red : sf::Color::Green);
+            } else if (code == sf::Keyboard::Key::Right) {
+                if (paused) {
                     game->step();
                 }
-            }
-            else if (event.key.code == Keyboard::R){
+            } else if (code == sf::Keyboard::Key::R) {
                 reset();
                 paused = true;
-                statusText.setString("⏸ PAUSE");
-                statusText.setFillColor(Color::Red);
+                statusText.setString("PAUSE");
+                statusText.setFillColor(sf::Color::Red);
             }
         }
     }
 }
 
-void Gui::reset(){
-    delete game;
-    string initBoard = GestionFichier::LireFichier(FilePath);
-    game = new Game(GridSerializer::load(initBoard, Lines, Columns));
+void Gui::reset() {
+    std::string initBoard = GestionFichier::LireFichier(filePath);
+    game = std::make_unique<Game>(GridSerializer::load(initBoard, Lines, Columns));
 }
 
-void Gui::update(){
-    if (!paused && clock.getElapsedTime().asSeconds() >= iterationDelay){
+void Gui::update() {
+    if (!paused && clock.getElapsedTime().asSeconds() >= iterationDelay) {
         game->step();
         clock.restart();
     }
 }
 
-void Gui::run(){
-    while (window->isOpen()){
+void Gui::run() {
+    while (window->isOpen()) {
         handleEvents();
         update();
         render();
