@@ -7,6 +7,7 @@ std::vector<std::vector<int>> GridSerializer::load(const std::string &lines, int
     rows = 0;
     cols = 0;
 
+    // Read the header line: "<rows> <cols>".
     std::stringstream header(lines);
     if (!(header >> rows >> cols) || rows <= 0 || cols <= 0) {
         rows = 0;
@@ -54,6 +55,7 @@ std::string GridSerializer::dump(const std::vector<std::vector<int>> &lines, int
     rows = static_cast<int>(lines.size());
     cols = rows > 0 ? static_cast<int>(lines[0].size()) : 0;
 
+    // Header then each row on its own line separated by spaces.
     std::stringstream ss;
     ss << rows << " " << cols;
 

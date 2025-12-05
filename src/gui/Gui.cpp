@@ -13,8 +13,8 @@ Gui::Gui(const std::string &filePath)
       Lines(0),
       Columns(0),
       cellSize(20),
-      iterationDelay(0.5f),
-      paused(false) {
+    iterationDelay(0.5f),
+    paused(false) {
     std::string initBoard = GestionFichier::LireFichier(filePath);
     game = std::make_unique<Game>(GridSerializer::load(initBoard, Lines, Columns));
 
@@ -42,6 +42,7 @@ Gui::Gui(const std::string &filePath)
     const int windowWidth = std::min(std::max(gridWidth, minWidth), maxWindowWidth);
     const int windowHeight = std::min(std::max(gridHeight + hudHeight, minHeight), maxWindowHeight);
 
+    // Create the window and limit FPS for stable rendering.
     window = std::make_unique<sf::RenderWindow>(
         sf::VideoMode(static_cast<unsigned int>(windowWidth),
                       static_cast<unsigned int>(windowHeight)),
@@ -78,6 +79,7 @@ Gui::Gui(const std::string &filePath)
         std::cout << "Erreur : aucune police disponible. Copiez resources/fonts/DejaVuSans.ttf\n";
     }
 
+    // HUD text setup.
     const float hudTop = static_cast<float>(gridHeight) + 10.f;
     statusText.setFont(font);
     statusText.setCharacterSize(20);
@@ -167,14 +169,17 @@ void Gui::handleEvents() {
                 speedText.setString(oss.str());
 
             } else if (code == sf::Keyboard::Space) {
+                // Toggle pause/play.
                 paused = !paused;
                 statusText.setString(paused ? "PAUSE" : "PLAY");
                 statusText.setFillColor(paused ? sf::Color::Red : sf::Color::Green);
             } else if (code == sf::Keyboard::Right) {
                 if (paused) {
+                    // Single step when paused.
                     game->step();
                 }
             } else if (code == sf::Keyboard::R) {
+                // Reload initial grid and pause.
                 reset();
                 paused = true;
                 statusText.setString("PAUSE");

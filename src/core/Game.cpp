@@ -12,6 +12,7 @@ Game::~Game() = default;
 Grid* Game::getGrid(){return grid.get();}
 
 void Game::run(int stepNumber){
+    // Run the chosen number of steps sequentially.
     for (int i = 0; i < stepNumber; i++){
         step();
     }

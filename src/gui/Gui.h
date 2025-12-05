@@ -25,6 +25,7 @@ private:
     sf::Text helpText;
 
 public:
+    // Initialize the GUI with a board file path.
     explicit Gui(const std::string &filePath);
     ~Gui();
 

@@ -13,6 +13,7 @@ private:
     std::vector<std::vector<Cell>> cells;
 
 public:
+    // Build a grid from an integer matrix (values map to cell states).
     explicit Grid(const std::vector<std::vector<int>> &initialState);
     ~Grid() = default;
 

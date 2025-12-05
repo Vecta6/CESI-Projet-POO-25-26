@@ -9,6 +9,7 @@ std::string GestionFichier::LireFichier(const std::string &ChSource){
         std::string content;
         
         if (file.is_open()) {
+            // Concatenate lines with newlines to preserve structure.
             std::string ligne;
             while (getline(file, ligne)) {
                 content += ligne + "\n";
@@ -24,6 +25,7 @@ bool GestionFichier::EcrireFichier(const std::string &ChSource, const std::strin
     std::ofstream file(ChSource);
 
     if (file.is_open()) {
+        // Write the text as-is; overwrite existing content.
         file << Texte;
         file.close();
     } else {

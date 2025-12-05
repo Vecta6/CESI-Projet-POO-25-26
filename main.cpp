@@ -6,6 +6,7 @@
 #include "src/console/Console.h"
 #include "src/gui/Gui.h"
 
+// Entry point: choose console or GUI mode, read the input file path, and run.
 int main() {
     try {
         char mode = '\0';

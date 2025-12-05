@@ -9,6 +9,7 @@ class Game{
         std::unique_ptr<Grid> grid;
         std::unique_ptr<Rule> rule;
     public:
+        // Build a game with the given initial grid and the classic Conway rule.
         explicit Game(const std::vector<std::vector<int>> &gridData);
         ~Game();
 
@@ -16,6 +17,8 @@ class Game{
         Grid* getGrid();
 
         // Simulation control
+        // Run a fixed number of iterations.
         void run(int stepNumber);
+        // Run a single iteration.
         void step();
 };

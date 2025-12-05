@@ -12,6 +12,7 @@ Grid::Grid(const std::vector<std::vector<int>> &initialState) {
     lines = static_cast<int>(initialState.size());
     columns = lines > 0 ? static_cast<int>(initialState[0].size()) : 0;
 
+    // Convert integers into concrete Cell objects.
     cells.resize(lines);
     for (int r = 0; r < lines; r++) {
         cells[r].reserve(columns);
