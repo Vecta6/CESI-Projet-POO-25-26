@@ -60,11 +60,11 @@ Window clamps to ~90% of the desktop; HUD shows status and speed.
 - Obstacle cells preserved across iterations.
 - Console output per iteration in dedicated folder.
 - SFML GUI with adjustable simulation speed.
+- Core unit tests (`core-tests`) covering serializer, toroidal behavior, oscillator, obstacles, and multi-step runs.
 
-Gaps:
-- No automated unit tests included yet.
-- Only classic Conway rules (no variants), no pre-made pattern placement, no parallelization.
-- Required design diagrams are not part of this repo.
+### Tests
+- Build: `cmake --build cmake-build-debug --target core-tests`
+- Run: `cd cmake-build-debug && ./core-tests`
 
 ### Authors
 CESI 2025/2026 — student project.
@@ -131,11 +131,11 @@ La fenêtre est limitée à ~90 % de l’écran ; le HUD montre l’état et la 
 - Obstacles conservés d’une itération à l’autre.
 - Export console des itérations dans un dossier dédié.
 - GUI SFML avec vitesse ajustable.
+- Tests unitaires cœur (`core-tests`) couvrant sérialisation, comportement toroïdal, oscillateur, obstacles et exécution multi-pas.
 
-Manques :
-- Pas de tests unitaires fournis.
-- Uniquement les règles classiques (pas de variantes), pas de motifs préconfigurés, pas de parallélisation.
-- Diagrammes de conception non inclus dans ce dépôt.
+### Tests
+- Compilation : `cmake --build cmake-build-debug --target core-tests`
+- Exécution : `cd cmake-build-debug && ./core-tests`
 
 ### Auteurs
 CESI 2025/2026 — projet étudiant.
