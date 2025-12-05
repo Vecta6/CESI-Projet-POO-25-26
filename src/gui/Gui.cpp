@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 Gui::Gui(const std::string &filePath)
     : filePath(filePath),
@@ -35,8 +36,12 @@ Gui::Gui(const std::string &filePath)
         "Jeu de la Vie");
     window->setFramerateLimit(60);
 
-    // Cherche une police "basique" courante sur Linux/Windows/macOS pour éviter les erreurs.
-    const std::string candidates[] = {
+    // Charge d'abord la police fournie avec le projet, puis différents chemins système.
+    const std::vector<std::string> candidates = {
+        "resources/fonts/DejaVuSans.ttf",            // depuis la racine du projet
+        "../resources/fonts/DejaVuSans.ttf",         // depuis le dossier build
+        "fonts/DejaVuSans.ttf",
+        "../fonts/DejaVuSans.ttf",
         "/usr/share/fonts/TTF/DejaVuSans.ttf",                        // Arch/Manjaro
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",            // Debian/Ubuntu
         "/usr/share/fonts/dejavu/DejaVuSans.ttf",                     // Générique
@@ -56,8 +61,9 @@ Gui::Gui(const std::string &filePath)
             break;
         }
     }
+
     if (!fontLoaded) {
-        std::cout << "Erreur : aucune police systeme standard n'a pu etre chargee.\n";
+        std::cout << "Erreur : aucune police disponible. Copiez resources/fonts/DejaVuSans.ttf\n";
     }
 
     const float hudTop = static_cast<float>(gridHeight) + 10.f;
