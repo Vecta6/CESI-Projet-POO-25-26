@@ -1,29 +1,51 @@
 #include "GridSerializer.h"
 #include <sstream>
+#include <string>
+#include <iostream>
 
 std::vector<std::vector<int>> GridSerializer::load(const std::string &lines, int &rows, int &cols) {
     rows = 0;
     cols = 0;
 
-    std::stringstream ss(lines);
-    if (!(ss >> rows >> cols) || rows <= 0 || cols <= 0) {
+    std::stringstream header(lines);
+    if (!(header >> rows >> cols) || rows <= 0 || cols <= 0) {
         rows = 0;
         cols = 0;
         return {};
     }
 
     std::vector<std::vector<int>> grid(rows, std::vector<int>(cols, 0));
+    bool incomplete = false;
+
+    // Reparse ligne par ligne pour éviter de "déborder" d'une ligne sur l'autre.
+    std::stringstream content(lines);
+    std::string line;
+
+    // Saut de la première ligne (header déjà lu)
+    std::getline(content, line);
+
     for (int r = 0; r < rows; r++) {
+        if (!std::getline(content, line)) {
+            incomplete = true;
+            continue;
+        }
+
+        std::istringstream rowStream(line);
         for (int c = 0; c < cols; c++) {
             int value;
-            if (!(ss >> value)) {
-                // Invalid or incomplete payload; signal failure with empty grid.
-                rows = 0;
-                cols = 0;
-                return {};
+            if (rowStream >> value) {
+                grid[r][c] = value;
+            } else {
+                // Manque des valeurs sur la ligne : compléter par 0 et signaler.
+                incomplete = true;
+                grid[r][c] = 0;
             }
-            grid[r][c] = value;
         }
+    }
+
+    if (incomplete) {
+        std::cerr << "Avertissement: grille incomplete dans le fichier d'entree, "
+                  << "les valeurs manquantes sont remplacees par 0.\n";
     }
 
     return grid;

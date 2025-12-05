@@ -6,11 +6,8 @@
 #ifndef CESI_PROJECT_POO_25_26_RULE_H
 #define CESI_PROJECT_POO_25_26_RULE_H
 
-
-
-#include "../Cells/CellState.h"
-#include "../Cells/Cell.h"
-#include "../Grid.h"
+class Cell;
+class CellState;
 
 class Rule {
 public:

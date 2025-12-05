@@ -10,6 +10,8 @@ add_executable(CESI-Projet-POO-25-26 main.cpp
         src/core/Grid.h
         src/core/Game.cpp
         src/core/Game.h
+        src/core/utils/GridSerializer.cpp
+        src/core/utils/GridSerializer.h
         src/core/Rule/Rule.cpp
         src/core/Rule/Rule.h
         src/core/Rule/Rules/ClassicLifeRule.cpp
