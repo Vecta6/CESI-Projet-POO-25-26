@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ObstacleAlive.h"
 
     bool ObstacleAlive::isAlive(){return true;}

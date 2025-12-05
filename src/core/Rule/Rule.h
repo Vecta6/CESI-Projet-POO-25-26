@@ -10,7 +10,6 @@
 
 #include "../Cells/CellState.h"
 #include "../Cells/Cell.h"
-#include "../Grid.h"
 
 class Rule {
 public:

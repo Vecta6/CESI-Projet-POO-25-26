@@ -21,5 +21,5 @@ public:
     
     // Methods
     int countAliveNeighbours(int line, int column) const;
-    void step(Rule *rule);
+    void step(Rule* rule);
 };

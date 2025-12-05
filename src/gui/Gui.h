@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../core/Game.h"
-#include "../GestionFichiers.h"
-#include "../utils/GridSerializer.h"
+#include "../core/GestionFichiers.h"
+#include "../core/utils/GridSerializer.h"
 
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Event.hpp>
